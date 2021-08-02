@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { blogPosts } from "../lib/data";
 import Link from "next/link";
+import { format, parseISO } from "date-fns";
 
 export default function Home() {
   return (
@@ -10,22 +11,31 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1>My Blog</h1>
-      </main>
-
-      <div>
+      <div className="space-y-4">
         {blogPosts.map((item) => (
-          <div key={item.slug}>
-            <div>
-              <Link href={`/blog/${item.slug}`}>
-                <a>{item.title}</a>
-              </Link>
-            </div>
-            <div>{item.date.toString()}</div>
-            <div>{item.content}</div>
-          </div>
+          <BlogListItem key={item.slug} {...item} />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function BlogListItem({ slug, title, date, content }) {
+  const sanitizeDate = format(parseISO(date), "MMMM do, uuu");
+
+  return (
+    <div
+      className="border border-grey-100 shadow hover:shadow-md 
+    hover:border-black-300 rounded-md p-4 transition duration-200 ease-in"
+    >
+      <div>
+        <div>
+          <Link href={`/blog/${slug}`}>
+            <a className="font-bold">{title}</a>
+          </Link>
+        </div>
+        <div className="text-gray-600 text-xs">{sanitizeDate}</div>
+        <div>{content}</div>
       </div>
     </div>
   );
